@@ -1,0 +1,22 @@
+import sqlite3
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+conn = sqlite3.connect('臺灣證券.db')
+
+plt.figure(figsize=(15,5), dpi=300)
+plt.rcParams['font.sans-serif'] = 'Microsoft JhengHei'
+
+stock = ['玉晶光','台積電','愛普']
+
+for s in stock:
+    sql = 'Select * from 股票 where 證券名稱="'+s+'"'
+    df = pd.read_sql( sql, conn)
+    df = df.sort_values(by='日期')
+    plt.plot(df['日期'], df['收盤價'], label=s)
+plt.legend()
+plt.xticks( np.linspace(0, len(df)-1, 13) )
+plt.grid()
+plt.title('三支股票 2020.09~2021.08 股價走勢圖',fontsize=30)
+plt.savefig('4-4三支股票一年股價.png')
